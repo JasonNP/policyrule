@@ -12,6 +12,10 @@
                     "like": "RSGR*"
                 },
                 {
+                    "field": "name",
+                    "equals": "[toUpper(field('name'))]"
+                },
+                {
                     "value": "[length(field('name'))]",
                     "equals": 14
                 },
@@ -43,12 +47,12 @@
                     {
                         "operation": "addOrReplace",
                         "field": "tags['location']",
-                        "value": "[if(equals(substring(field('name'), 4, 3), 'eu2'), 'eastus2', if(equals(substring(field('name'), 4, 3), 'CU1'), 'centralus', ''))]"
+                        "value": "[if(equals(substring(field('name'), 4, 3), 'EU2'), 'eastus2', if(equals(substring(field('name'), 4, 3), 'CU1'), 'centralus', ''))]"
                     },
                     {
                         "operation": "addOrReplace",
                         "field": "tags['codApp']",
-                        "value": "[substring(field('name'), 7, 4)]"
+                        "value": "[toUpper(substring(field('name'), 7, 4))]"
                     },
                     {
                         "operation": "addOrReplace",
