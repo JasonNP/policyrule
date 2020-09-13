@@ -1,0 +1,63 @@
+{
+    "mode": "All",
+    "policyRule": {
+        "if": {
+            "allOf": [
+                {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+                },
+                {
+                    "field": "name",
+                    "like": "RSGR*"
+                },
+                {
+                    "value": "[length(field('name'))]",
+                    "equals": 14
+                },
+                {
+                    "value": "[if(equals(length(field('name')), 14), substring(field('name'), 11, 1), 'null')]",
+                    "in": [
+                        "D",
+                        "C",
+                        "P",
+                        "F"
+                    ]
+                },
+                {
+                    "value": "[if(equals(length(field('name')), 14), substring(field('name'), 4, 3), 'null')]",
+                    "in": [
+                        "EU2",
+                        "CU1"
+                    ]
+                }
+            ]
+        },
+        "then": {
+            "effect": "modify",
+            "details": {
+                "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                ],
+                "operations": [
+                    {
+                        "operation": "addOrReplace",
+                        "field": "tags['location']",
+                        "value": "[if(equals(substring(field('name'), 4, 3), 'eu2'), 'eastus2', if(equals(substring(field('name'), 4, 3), 'CU1'), 'centralus', ''))]"
+                    },
+                    {
+                        "operation": "addOrReplace",
+                        "field": "tags['codApp']",
+                        "value": "[substring(field('name'), 7, 4)]"
+                    },
+                    {
+                        "operation": "addOrReplace",
+                        "field": "tags['environment']",
+                        "value": "[if(equals(substring(field('name'), 11, 1), 'D'), 'DESA', if(equals(substring(field('name'), 11, 1), 'C'), 'CERT',if(equals(substring(field('name'), 11, 1), 'P'), 'PROD',if(equals(substring(field('name'), 11, 1), 'F'), 'INFR', ''))))]"
+                    }
+                ]
+            }
+        }
+    },
+    "parameters": {}
+}
