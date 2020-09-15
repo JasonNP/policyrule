@@ -8,14 +8,6 @@
                     "equals": "Microsoft.Resources/subscriptions/resourceGroups"
                 },
                 {
-                    "field": "name",
-                    "like": "RSGR*"
-                },
-                {
-                    "field": "name",
-                    "equals": "[toUpper(field('name'))]"
-                },
-                {
                     "value": "[length(field('name'))]",
                     "equals": 14
                 },
@@ -46,18 +38,13 @@
                 "operations": [
                     {
                         "operation": "addOrReplace",
-                        "field": "tags['location']",
-                        "value": "[if(equals(substring(field('name'), 4, 3), 'EU2'), 'eastus2', if(equals(substring(field('name'), 4, 3), 'CU1'), 'centralus', ''))]"
-                    },
-                    {
-                        "operation": "addOrReplace",
                         "field": "tags['codApp']",
-                        "value": "[toUpper(substring(field('name'), 7, 4))]"
+                        "value": "[if(equals(length(field('name')), 14), toUpper(substring(field('name'), 7, 4)), 'null')]"
                     },
                     {
                         "operation": "addOrReplace",
                         "field": "tags['environment']",
-                        "value": "[if(equals(substring(field('name'), 11, 1), 'D'), 'DESA', if(equals(substring(field('name'), 11, 1), 'C'), 'CERT',if(equals(substring(field('name'), 11, 1), 'P'), 'PROD',if(equals(substring(field('name'), 11, 1), 'F'), 'INFR', ''))))]"
+                        "value": "[if(equals(length(field('name')), 14), if(equals(substring(field('name'), 11, 1), 'D'), 'DESA', if(equals(substring(field('name'), 11, 1), 'C'), 'CERT',if(equals(substring(field('name'), 11, 1), 'P'), 'PROD',if(equals(substring(field('name'), 11, 1), 'F'), 'INFR', '')))), 'null')]"
                     }
                 ]
             }
